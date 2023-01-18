@@ -3,8 +3,15 @@ package com.example.noteappusinroom;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "tbl_tasks")
 public class TaskModel implements Parcelable {
+    @PrimaryKey(autoGenerate = true)
     private int id;
+    @ColumnInfo(name = "title")
     private String TaskTitle;
     private boolean isCompleted;
 
