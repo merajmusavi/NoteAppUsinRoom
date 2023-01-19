@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NoteAppUsinRoom</string>
+    <string name="add_your_task">add your task</string>
+    <string name="add_task">add task</string>
+</resources>
