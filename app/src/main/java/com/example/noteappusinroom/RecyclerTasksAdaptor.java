@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -49,6 +50,10 @@ public class RecyclerTasksAdaptor extends RecyclerView.Adapter<RecyclerTasksAdap
            }
        }
    }
+   public void search(List<TaskModel> list){
+     this.taskModelList = list;
+     notifyDataSetChanged();
+   }
    public void deleteItem(TaskModel taskModel){
        for (int i = 0; i < taskModelList.size(); i++) {
            if (taskModelList.get(i).getId()==taskModel.getId()){
@@ -75,8 +80,16 @@ public class RecyclerTasksAdaptor extends RecyclerView.Adapter<RecyclerTasksAdap
 
     }
  public void bind(TaskModel taskModel){
+        checkBox.setOnCheckedChangeListener(null);
         checkBox.setChecked(taskModel.isCompleted());
         checkBox.setText(taskModel.getTaskTitle());
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                taskModel.setCompleted(isChecked);
+                callBack.onCheckClicked(taskModel);
+            }
+        });
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +108,7 @@ public class RecyclerTasksAdaptor extends RecyclerView.Adapter<RecyclerTasksAdap
     public interface CallBack{
         void onDeleteClicked(TaskModel taskModel);
         void OnUpdateClicked(TaskModel taskModel);
+        void onCheckClicked(TaskModel taskModel);
 
     }
 
