@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,8 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import kotlinx.coroutines.scheduling.Task;
+
 public class RecyclerTasksAdaptor extends RecyclerView.Adapter<RecyclerTasksAdaptor.ViewHolder> {
  List<TaskModel> taskModelList = new ArrayList<>();
+ private CallBack callBack;
+ public RecyclerTasksAdaptor(CallBack callBack){
+     this.callBack = callBack;
+ }
 
     @NonNull
     @Override
@@ -33,6 +40,22 @@ public class RecyclerTasksAdaptor extends RecyclerView.Adapter<RecyclerTasksAdap
         this.taskModelList.addAll(list);
         notifyDataSetChanged();
 
+   }
+   public void updateItem(TaskModel taskModel){
+       for (int i = 0; i < taskModelList.size(); i++) {
+           if (taskModelList.get(i).getId()==taskModel.getId()){
+               taskModelList.set(i,taskModel);
+               notifyItemChanged(i);
+           }
+       }
+   }
+   public void deleteItem(TaskModel taskModel){
+       for (int i = 0; i < taskModelList.size(); i++) {
+           if (taskModelList.get(i).getId()==taskModel.getId()){
+               taskModelList.remove(i);
+               notifyItemRemoved(i);
+           }
+       }
    }
     @Override
     public int getItemCount() {
@@ -54,7 +77,25 @@ public class RecyclerTasksAdaptor extends RecyclerView.Adapter<RecyclerTasksAdap
  public void bind(TaskModel taskModel){
         checkBox.setChecked(taskModel.isCompleted());
         checkBox.setText(taskModel.getTaskTitle());
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+             callBack.onDeleteClicked(taskModel);
+            }
+        });
+  edit.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+          callBack.OnUpdateClicked(taskModel);
+      }
+  });
  }
 
     }
+    public interface CallBack{
+        void onDeleteClicked(TaskModel taskModel);
+        void OnUpdateClicked(TaskModel taskModel);
+
+    }
+
 }
